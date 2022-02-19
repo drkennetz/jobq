@@ -9,7 +9,7 @@ class NamedQueues(object):
     """
 
     def __init__(self):
-        logging.basicConfig(format='%(process)d-%(levelname)s:%(message)s', level=logging.DEBUG)
+        logging.basicConfig(format='%(asctime)s.%(msecs)03d %(process)d-%(levelname)s:%(message)s', level=logging.DEBUG)
         self.queues = {}
         self.pids = {}
 

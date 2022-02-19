@@ -13,17 +13,17 @@ class Server(NamedQueues.NamedQueues):
         self.context = context
         self.port = port
         self.socket = None
-        NamedQueues.__init__(self)
+        super().__init__()
 
     def set_socket(self):
         """Creates the Reply socket"""
         self.socket = self.context.socket(zmq.REP)
         logging.info(f' created reply socket')
 
-    def bind_to_port(self, port):
+    def bind_to_port(self):
         """Binds the socket to a port by which to communicate"""
         self.socket.bind(f'tcp://*:{self.port}')
-        logging.info(f' bound socket to port: {port}')
+        logging.info(f' bound socket to port: {self.port}')
 
     def handle_message(self, message, queuename='', job=''):
         """Does the appropriate thing with message received"""

@@ -26,7 +26,7 @@ def get_args():
     ######################
     parser_start_server = subparsers.add_parser('start_server', description="Start a new server")
     parser_start_server.add_argument("-p", "--port", required=True, help="The port to start the server on.")
-
+    parser_start_server.set_defaults(func=core.start_server)
     #####################
     # Start a new queue #
     #####################
@@ -41,5 +41,16 @@ def get_args():
     parser_submit.set_defaults(func=core.submit)
 
     parser_list = subparsers.add_parser('list', description="List all active queues")
+
+    parser_client = subparsers.add_parser('client_message', parents=[parent_parser], description="send a message from the client to the server")
+    parser_client.add_argument("-p", "--port", required=True, help="The port the server is listening on.")
+    parser_client.add_argument("-m", "--message", required=True,
+                               choices=["check_for_queue",
+                                        "add_job_to_queue",
+                                        "requeue_to_front",
+                                        "init_queue",
+                                        "list_queues"],
+                               help="The message to send to the server.")
+    parser_client.set_defaults(func=core.client_message)
     args = parser.parse_args()
     return args
