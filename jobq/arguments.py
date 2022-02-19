@@ -20,11 +20,18 @@ def get_args():
     parent_parser.add_argument("-q", "--queue", type=str, required=True,
                                help="the queue you'd like to use")
 
+
+    ######################
+    # Start a new server #
+    ######################
+    parser_start_server = subparsers.add_parser('start_server', description="Start a new server")
+    parser_start_server.add_argument("-p", "--port", required=True, help="The port to start the server on.")
+
     #####################
     # Start a new queue #
     #####################
-    parser_start = subparsers.add_parser('start', parents=[parent_parser], description="Start a new queue")
-    parser_start.set_defaults(func=core.start)
+    parser_start_queue = subparsers.add_parser('start_queue', parents=[parent_parser], description="Start a new queue")
+    #parser_start.set_defaults(func=core.start)
 
     ###########################
     # Submit a job to a queue #
@@ -33,5 +40,6 @@ def get_args():
     parser_submit.add_argument("-c", "--cmd", nargs="*", required=True, help="The full command line as a string to submit as a job.")
     parser_submit.set_defaults(func=core.submit)
 
+    parser_list = subparsers.add_parser('list', description="List all active queues")
     args = parser.parse_args()
     return args
