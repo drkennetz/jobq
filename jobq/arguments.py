@@ -13,37 +13,51 @@ def get_args():
                                        help="call a specific subparser with its help message to display args")
     subparsers.required = True
 
-    #########################################################################
-    # Add parent parser for arguments that will be used by other subparsers #
-    #########################################################################
+    ######################################################
+    # Parent parser for ports - Everything requires port #
+    ######################################################
     parent_parser = argparse.ArgumentParser(add_help=False)
-    parent_parser.add_argument("-q", "--queue", type=str, required=True,
-                               help="the queue you'd like to use")
-
+    parsent_parser.add_argument("-p", "--port", type=str, required=True,
+                                help="The server port")
 
     ######################
     # Start a new server #
     ######################
-    parser_start_server = subparsers.add_parser('start_server', description="Start a new server")
-    parser_start_server.add_argument("-p", "--port", required=True, help="The port to start the server on.")
+    parser_start_server = subparsers.add_parser('start_server', parents=[parent_parser], description="Start a new server")
     parser_start_server.set_defaults(func=core.start_server)
-    #####################
-    # Start a new queue #
-    #####################
-    parser_start_queue = subparsers.add_parser('start_queue', parents=[parent_parser], description="Start a new queue")
-    #parser_start.set_defaults(func=core.start)
 
-    ###########################
-    # Submit a job to a queue #
-    ###########################
-    parser_submit = subparsers.add_parser('submit', parents=[parent_parser], description="Submit a job to a queue")
-    parser_submit.add_argument("-c", "--cmd", nargs="*", required=True, help="The full command line as a string to submit as a job.")
-    parser_submit.set_defaults(func=core.submit)
+    #########################
+    # Stop a running server #
+    #########################
+    parser_stop_server = subparsers.add_parser('stop_server', parents=[parent_parser], description="Stop a running server")
+    parser_stop_server.set_defaults(func=core.stop_server)
 
-    parser_list = subparsers.add_parser('list', description="List all active queues")
+    ###############################
+    # Client subparser entrypoint #
+    ###############################
+    parser_client = subparsers.add_parser('client', parents=[parent_parser], description="send a message from the client to the server")
 
-    parser_client = subparsers.add_parser('client_message', parents=[parent_parser], description="send a message from the client to the server")
-    parser_client.add_argument("-p", "--port", required=True, help="The port the server is listening on.")
+    ##########################
+    # Client check for queue #
+    ##########################
+    check_for_queue = parser_client.add_parser('check_for_queue', description="See if a queue has been initiated")
+    check_for_queue.add_argument("-q", "--queue", type=str, required=True,
+                                 help="the queue to check for.")
+    check_for_queue.set_defaults(func=core.check_for_queue)
+
+    ##########################
+    # Client list all queues #
+    ##########################
+    list_all_queues = parser_client.add_parser('list_all_queues', description="list all queues initiated in server")
+    list_all_queues.set_defaults(func=core.list_all_queues)
+
+    ##################################
+    # Client check all jobs in queue #
+    ##################################
+    list_jobs_in_queue = parser_client.add_parser('list_jobs_in_queue', description="Lists all jobs in queue")
+    list_jobs_in_queue.add_argument("-q", "--queue", type=str, required=True,
+                                    help="Lists all pending jobs in queue")
+    
     parser_client.add_argument("-m", "--message", required=True,
                                choices=["check_for_queue",
                                         "add_job_to_queue",
