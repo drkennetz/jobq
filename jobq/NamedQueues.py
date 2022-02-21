@@ -41,6 +41,10 @@ class NamedQueues(object):
         if queuename in self.queues:
             raise QueueExistsError(queuename)
         self.queues[queuename] = deque()
+    def list_queues(self):
+        """ Lists all queues """
+        for key in self.queues:
+            print(key)
 
 class NamedQueuesError(Exception):
     """Base class for other exceptions"""

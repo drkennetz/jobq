@@ -3,9 +3,6 @@
 ## TODO QUEUE PRIORITIES:
 - add priorities to queues - run jobs based on priority
 
-## TODO HASHPASSWORD:
-- add a utilities script and add hashpassword to it
-
 ## TODO CONFIG DETAILS:
 - add the option to start a server based on config instead of command line [this way could configure everything without going through all the commands bs]
 
